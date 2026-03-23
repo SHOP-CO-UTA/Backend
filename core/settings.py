@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     "drf_spectacular_sidecar",
     "rest_framework",
     "rest_framework_simplejwt",
-    "example"
+    "example",
+    "apps.authentication",
+    "apps.catalog",
+    "apps.cart",
 ]
 
 MIDDLEWARE = [
@@ -118,9 +121,9 @@ SIMPLE_JWT = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "product",
+        "NAME": "SHOP.CO",
         "USER": "postgres",
-        "PASSWORD": "1",
+        "PASSWORD": "fong0775147800",
         "HOST": "localhost",
         "PORT": "5432",
     }

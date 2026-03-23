@@ -44,6 +44,10 @@ python manage.py migrate
 
 **NOTE** If errors happen, check your database connection environment variables. (If no database, please create new one)
 
+Notes on creating/modifying tables in the database (PHONG)
+- python manage.py makemigrations (Create the modified file (without touching the database)).
+- python manage.py migrate (Apply changes to the database).
+
 #### Run the server
 
 To start the development server, run the following command.
