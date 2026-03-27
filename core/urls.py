@@ -29,4 +29,5 @@ urlpatterns = [
         spectacular_views.SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
+    path("catalog/", include("apps.catalog.urls")),
 ]
