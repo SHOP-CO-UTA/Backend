@@ -17,21 +17,30 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     pagination_class = ProductPagination
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ["price", "created_at", "rating", "name"]
+    ordering_fields = ["price", "created_at", "rating", "name", "stock"]
     ordering = ["-created_at"]
 
     def get_queryset(self):
         queryset = (
             Product.objects
-            .prefetch_related("categories", "product_categories__category")
+            .prefetch_related(
+                "categories",
+                "product_categories__category",
+                "variants",
+            )
             .all()
             .order_by("-created_at")
         )
 
-        # Filter theo category slug: /api/products/?category=casual
+        # Filter theo category slug (loại SP, vd t-shirts): ?category=t-shirts
         category_slug = self.request.query_params.get("category")
         if category_slug:
             queryset = queryset.filter(categories__slug=category_slug)
+
+        # Filter theo dress style (cũng là Category slug, vd casual): ?dress_style=casual
+        dress_style_slug = self.request.query_params.get("dress_style")
+        if dress_style_slug:
+            queryset = queryset.filter(categories__slug=dress_style_slug)
 
         # Filter theo category id: /api/products/?category_id=1
         category_id = self.request.query_params.get("category_id")
@@ -46,7 +55,15 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         if max_price is not None:
             queryset = queryset.filter(price__lte=max_price)
 
-        # do join M2M nên cần distinct để tránh duplicate
+        color = self.request.query_params.get("color")
+        if color:
+            queryset = queryset.filter(variants__color=color)
+
+        size = self.request.query_params.get("size")
+        if size:
+            queryset = queryset.filter(variants__size=size)
+
+        # do join M2M / variants nên cần distinct để tránh duplicate
         return queryset.distinct()
 
 

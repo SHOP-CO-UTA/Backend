@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Category, ProductCategory
+from .models import Product, Category, ProductCategory, ProductVariant
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -24,8 +24,15 @@ class ProductCategoryWriteSerializer(serializers.Serializer):
     is_primary = serializers.BooleanField(default=False)
 
 
+class ProductVariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductVariant
+        fields = ["id", "color", "size", "stock", "sku", "created_at", "updated_at"]
+
+
 class ProductSerializer(serializers.ModelSerializer):
     categories = CategorySerializer(many=True, read_only=True)
+    variants = ProductVariantSerializer(many=True, read_only=True)
     category_mappings = ProductCategoryWriteSerializer(many=True, write_only=True, required=False)
     primary_category = serializers.SerializerMethodField()
 
@@ -45,6 +52,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "categories",
+            "variants",
             "primary_category",
             "category_mappings",
         ]

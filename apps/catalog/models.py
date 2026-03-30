@@ -50,6 +50,44 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
+class ProductVariant(models.Model):
+    """Biến thể SKU: màu + size + tồn theo từng dòng."""
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="variants",
+        db_column="product_id",
+    )
+    color = models.CharField(
+        max_length=32,
+        help_text="Mã màu (vd hex #00C129) khớp filter frontend.",
+    )
+    size = models.CharField(max_length=40)
+    stock = models.PositiveIntegerField(default=0)
+    sku = models.CharField(max_length=120, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "product_variants"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["product", "color", "size"],
+                name="uq_product_variants_product_color_size",
+            )
+        ]
+        indexes = [
+            models.Index(fields=["product"], name="idx_pv_product"),
+            models.Index(fields=["color"], name="idx_pv_color"),
+            models.Index(fields=["size"], name="idx_pv_size"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.product_id} {self.color} {self.size}"
+
+
 class ProductCategory(models.Model):
     product = models.ForeignKey(
         Product,
