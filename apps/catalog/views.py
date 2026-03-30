@@ -2,8 +2,8 @@ from rest_framework import viewsets, filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, Category
+from .serializers import ProductSerializer, CategorySerializer
 
 
 class ProductPagination(PageNumberPagination):
@@ -65,6 +65,26 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 
         # do join M2M / variants nên cần distinct để tránh duplicate
         return queryset.distinct()
+
+
+class DressStyleViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Danh sách các "dress styles" (thực chất là Category được seed sẵn: casual/formal/party/gym).
+
+    Endpoint này phục vụ phần Home -> DressStyle.
+    """
+
+    serializer_class = CategorySerializer
+    permission_classes = [AllowAny]
+    pagination_class = None  # Trả về array đơn giản (không paginated).
+
+    _DRESS_STYLE_SLUGS = ["casual", "formal", "party", "gym"]
+
+    def get_queryset(self):
+        return Category.objects.filter(
+            slug__in=self._DRESS_STYLE_SLUGS,
+            is_active=True,
+        ).order_by("sort_order", "name")
 
 
 # from django.shortcuts import render
