@@ -30,4 +30,5 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("catalog/", include("apps.catalog.urls")),
+    path("auth/", include("apps.authentication.urls")),
 ]
