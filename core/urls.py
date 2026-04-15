@@ -31,4 +31,5 @@ urlpatterns = [
     ),
     path("catalog/", include("apps.catalog.urls")),
     path("auth/", include("apps.authentication.urls")),
+    path("cart/", include("apps.cart.urls")),
 ]

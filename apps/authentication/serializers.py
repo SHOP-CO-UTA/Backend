@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
-    """Thông tin user trả về client (không có trường nhạy cảm)."""
+    """Thông tin user trả về client."""
 
     class Meta:
         model = User
@@ -17,7 +17,7 @@ class UserPublicSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
-    Đăng ký: email làm username (đơn giản, sau có thể chuyển custom user + email unique ở DB).
+    Đăng ký: email làm username.
     """
 
     password = serializers.CharField(write_only=True, min_length=8)
@@ -69,7 +69,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     """
-    Đăng nhập bằng email + password (form Login dùng email, không dùng username).
+    Đăng nhập bằng email + password.
     """
 
     def __init__(self, *args, **kwargs):

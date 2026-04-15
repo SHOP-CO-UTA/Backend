@@ -16,8 +16,8 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
     pagination_class = ProductPagination
-    lookup_field = "id"
-    lookup_url_kwarg = "id"
+    lookup_field = "id"             # xác định trường của model trong csdl để tra cứu bản ghi
+    lookup_url_kwarg = "id"         # xác định tên tham số trong URL để tra cứu bản ghi (nếu không định nghĩa, sẽ sử dụng lookup_field làm lookup_url_kwarg)
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ["price", "created_at", "rating", "name", "stock"]
     ordering = ["-created_at"]
@@ -87,26 +87,3 @@ class DressStyleViewSet(viewsets.ReadOnlyModelViewSet):
             slug__in=self._DRESS_STYLE_SLUGS,
             is_active=True,
         ).order_by("sort_order", "name")
-
-
-# from django.shortcuts import render
-# from rest_framework import viewsets
-# from rest_framework.pagination import PageNumberPagination
-# from rest_framework.permissions import AllowAny
-
-# from .models import Product
-# from .serializers import ProductSerializer
-
-# # Create your views here.
-# class ProductPagination(PageNumberPagination):
-#     page_size = 24
-#     page_size_query_param = "page_size"
-#     max_page_size = 100
-    
-
-# class ProductViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = Product.objects.select_related("category").all().order_by("-created_at")
-#     serializer_class = ProductSerializer
-#     permission_classes = [AllowAny]
-#     pagination_class = ProductPagination
-#     ordering_fields = ["price", "created_at", "rating", "name"]
